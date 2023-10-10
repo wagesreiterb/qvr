@@ -1,23 +1,21 @@
 import qvrDateTime
-import qvrConfig
-import subprocess
+import qvrRecording
 import time
 from datetime import datetime
 
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    my_date_time = qvrDateTime.QfrDateTime()
-    print(my_date_time.formatted_timestamp(), "[Info]", "starting qfr")
+
+    # my_date_time = qvrDateTime.QfrDateTime()
+    print(qvrDateTime.formatted_timestamp(), "[Info]", "starting qfr")
 
     record_date_time = "2023-10-08 01:31 AM EDT"
-    recording_duration = my_date_time.time_to_seconds("01:30")
-    print(my_date_time.formatted_timestamp(), "[Debug]", "recording_duration in seconds: ", recording_duration)
+    recording_duration = qvrDateTime.time_to_seconds("01:30")
+    print(qvrDateTime.formatted_timestamp(), "[Debug]", "recording_duration in seconds: ", recording_duration)
 
 
     # edt_time = datetime.strptime(record_date_time, '%Y-%m-%d %I:%M %p EDT')
-    record_date_time_CET = my_date_time.convert_to_CET(record_date_time)
+    record_date_time_CET = qvrDateTime.convert_to_CET(record_date_time)
 
     print("start recording at: ", record_date_time_CET)
 
@@ -43,48 +41,15 @@ if __name__ == '__main__':
 
     #######################################
 
+    my_qvr_recording = qvrRecording.QvrRecording()
+    my_qvr_recording.start_recording("abc")
 
-    server_url = qvrConfig.server_url
-    user = qvrConfig.user
-    password = qvrConfig.password
-    channel = "2101"
+    while True:
+        # if new job schedulable
+            # schedule_new_job
 
-    # recording_duration = 12000  # ins seconds # 12000
-    recording_duration = 65
-    new_recording_duration = recording_duration
-    recording_name = "testinger_"
-    check_interval = 1
-    start_time = time.time()
+        time.sleep(1)
+        pass
 
-    while time.time() - start_time < recording_duration:
-        new_recording_duration = int(recording_duration - (time.time() - start_time) + 1)
-        print(my_date_time.formatted_timestamp(), "[Debug]", "recording_duration:", recording_duration)
-        print(my_date_time.formatted_timestamp(), "[Debug]", "new_recording_duration:", new_recording_duration)
-        if new_recording_duration < 60: # ffmpeg doesn't start properly if recording duration is < 6
-            print(my_date_time.formatted_timestamp(), "[Info]", "new_recording_duration < 60, not starting recording anymore:", new_recording_duration)
-            break  # Exit the loop
-        try:
-            command = "ffmpeg" \
-                      + " -i " + server_url + "/" \
-                      + user + "/" \
-                      + password + "/" \
-                      + channel + " -t " \
-                      + str(new_recording_duration) \
-                      + " -c:v copy -c:a copy " \
-                      + recording_name + str(my_date_time.unix_time_stamp()) + ".mkv"
-            print(my_date_time.formatted_timestamp(), "[Debug]", "command: ", command)
-            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-            print(my_date_time.formatted_timestamp(), "[Info]", "ffmpeg has started")
-            process.wait()
 
-            if recording_duration >= 0:
-                print(my_date_time.formatted_timestamp(), "[Error]", "ffmpeg died, restarting...")
-            else:
-                print(my_date_time.formatted_timestamp(), "[Info]", "ffmpeg completed successfully")
 
-        except subprocess.CalledProcessError:
-            print(my_date_time.formatted_timestamp(), "[Error]", "ffmpeg has ended unexpectedly with a non-zero return code.")
-        except Exception as e:
-            print(f"An error occurred: {str(e)}") # If any other exception is raised, handle it here
-
-    print(my_date_time.formatted_timestamp(), "[Info]", "program has ended")
