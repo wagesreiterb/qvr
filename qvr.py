@@ -1,7 +1,9 @@
 import qvrDateTime
+import qvrConfig
 import subprocess
 import time
 from datetime import datetime
+
 
 
 # Press the green button in the gutter to run the script.
@@ -42,9 +44,9 @@ if __name__ == '__main__':
     #######################################
 
 
-    server_url = "http://:8080"
-    user = ""
-    password = ""
+    server_url = qvrConfig.server_url
+    user = qvrConfig.user
+    password = qvrConfig.password
     channel = "2101"
 
     # recording_duration = 12000  # ins seconds # 12000
