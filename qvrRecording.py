@@ -3,17 +3,6 @@ import qvrDateTime
 import subprocess
 import time
 
-
-class Person:
-
-    def __init__(self, p1Name, p2Name):
-        self.p1Name = p1Name
-        self.p2Name = p2Name
-
-    def getNameP1(self):
-        return self.p1Name
-
-
 class QvrRecording:
     def __init__(self):
         # my_date_time = qvrDateTime.QfrDateTime()

@@ -1,5 +1,7 @@
 import qvrDateTime
 import qvrRecording
+import qvrScheduler
+import qvrJobQueue
 import time
 from datetime import datetime
 
@@ -41,15 +43,18 @@ if __name__ == '__main__':
 
     #######################################
 
-    my_qvr_recording = qvrRecording.QvrRecording()
-    my_qvr_recording.start_recording("abc")
+    # my_qvr_recording = qvrRecording.QvrRecording()
+    # my_qvr_recording.start_recording("abc")
 
-    while True:
-        # if new job schedulable
-            # schedule_new_job
+    #######################################
 
-        time.sleep(1)
-        pass
+    job_queue = qvrJobQueue.JobQueue()
+    scheduler = qvrScheduler.QvrScheduler(job_queue)
+    scheduler.run()
+
+
+
+
 
 
 
