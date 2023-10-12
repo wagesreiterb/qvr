@@ -1,6 +1,7 @@
 import qvrConfig
 import qvrDateTime
 import subprocess
+import psutil
 import time
 
 class QvrRecording:
@@ -30,7 +31,7 @@ class QvrRecording:
                       "new_recording_duration < 60, not starting recording anymore:", new_recording_duration)
                 break  # Exit the loop
             try:
-                command = "ffmpeg" \
+                command = "/usr/bin/ffmpeg" \
                           + " -i " + server_url + "/" \
                           + user + "/" \
                           + password + "/" \
@@ -42,7 +43,12 @@ class QvrRecording:
                 process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                            text=True)
                 print(qvrDateTime.formatted_timestamp(), "[Info]", "ffmpeg has started")
-                process.wait()
+                # process.wait()
+                time.sleep(10)
+                # process.kill()
+                process.terminate()
+                for child in psutil.Process(process.pid).children(recursive=True):
+                    child.terminate()
 
                 if recording_duration >= 0:
                     print(qvrDateTime.formatted_timestamp(), "[Error]", "ffmpeg died, restarting...")
